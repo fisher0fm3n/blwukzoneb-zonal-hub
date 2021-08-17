@@ -70,6 +70,7 @@ export default {
     position: absolute;
     bottom: 0;
     padding: 0.75em;
+    cursor: pointer;
 
     color: rgba(255, 255,255, 0.7);
 
