@@ -5,14 +5,14 @@
       <img class="sidebar-logo" src="../../assets/images/icons/spades.svg" />
     </span>
 
-    <span v-else>
+    <span class="side-logo__text" v-else>
       BLW UK Zone B
     </span>
   </h1>
 
   <SidebarLink to="/" icon="fas fa-th-large">Dashboard</SidebarLink>
   <SidebarLink to="/inventory" icon="fas fa-boxes">Inventory</SidebarLink>
-  <SidebarLink to="/content" icon="fas fa-sd-card">Content Records</SidebarLink>
+  <SidebarLink to="/content" icon="fas fa-sd-card">Content Log</SidebarLink>
   <SidebarLink to="/registration" icon="fas fa-users">Attendance</SidebarLink>
   <SidebarLink to="/settings" icon="fas fa-cog">Settings</SidebarLink>
   <span class="collapse-icon" :class="{ 'rotate-180': collapsed }" @click="toggleSidebar">
@@ -64,6 +64,11 @@ export default {
 
   .sidebar-logo{
     width: 1.8rem;
+  }
+
+  .side-logo__text{
+    font-size: 1.3rem;
+font-weight: bold;
   }
 
   .collapse-icon{

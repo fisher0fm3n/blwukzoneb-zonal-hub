@@ -29,8 +29,8 @@ transition: opacity 0;
   font-weight: 400;
   user-select: none;
 
-  margin: 1rem 0;
-  padding: 0.4em;
+  margin: .8rem 0;
+  padding: 1.3rem .6rem;
   border-radius: 0.25em;
   height: 1.5em;
 
