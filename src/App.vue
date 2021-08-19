@@ -2,7 +2,9 @@
   <div v-if="!mobile">
     <Sidebar />
     <div class="app-content" :style="{ 'margin-left': sidebarWidth }">
-      <ItemModal />
+      <transition name="item">
+        <ItemModal v-if="itemModal" />
+      </transition>
       <router-view />
     </div>
   </div>
@@ -14,6 +16,7 @@
 </template>
 
 <script type="text/javascript">
+import { mapState } from "vuex";
 import Sidebar from "@/components/sidebar/Sidebar.vue";
 import ItemModal from "@/components/ItemModal.vue";
 import { sidebarWidth } from "@/assets/js/state";
@@ -45,6 +48,9 @@ export default {
       this.mobile = false;
     },
   },
+  computed: {
+    ...mapState(["itemModal"]),
+  },
 };
 </script>
 
@@ -70,6 +76,7 @@ body {
 
 .app-content {
   position: relative;
+  transition: 0.3s ease;
 }
 
 #nav {
@@ -83,6 +90,16 @@ body {
       color: #42b983;
     }
   }
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.1s;
+}
+
+.fade-enter,
+.fade-leave-to {
+  transition: opacity 0;
 }
 
 .flex {
@@ -104,5 +121,44 @@ body {
   p {
     margin-top: 16px;
   }
+}
+
+.add-button {
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 400;
+  border-radius: 3rem;
+  border: 0;
+  padding: 0.6rem 1.2rem;
+  background-color: #ff9a22;
+  color: #fff;
+  .inner-button {
+    color: #ff9a22;
+    background-color: #fff;
+    border-radius: 100%;
+    margin-right: 0.6rem;
+    min-width: 2rem;
+    min-height: 2rem;
+  }
+}
+
+.ace-orange {
+  background-color: #ff9a22;
+}
+
+.ace-blue {
+  background-color: #00b1ff;
+}
+</style>
+
+<style lang="scss" scoped>
+.item-enter-active,
+.item-leave-active {
+  transition: 0.8s ease all;
+}
+
+.item-enter-from,
+.item-leave-to {
+  transform: translateX(-700px);
 }
 </style>

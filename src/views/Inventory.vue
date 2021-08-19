@@ -40,6 +40,7 @@
 </template>
 
 <script>
+import { mapMutations } from "vuex";
 export default {
   name: "Inventory",
   data() {
@@ -49,7 +50,10 @@ export default {
   },
   components: {},
   methods: {
-    newItem() {},
+    ...mapMutations(["TOGGLE_ITEM"]),
+    newItem() {
+      this.TOGGLE_ITEM();
+    },
 
     toggleFilterMenu() {
       this.filterMenu = !this.filterMenu;
@@ -106,23 +110,6 @@ export default {
     }
   }
 
-  .add-button {
-    cursor: pointer;
-    font-size: 0.9rem;
-    font-weight: 400;
-    border-radius: 3rem;
-    padding: 0.6rem 1.2rem;
-    background-color: #ff9a22;
-    color: #fff;
-    .inner-button {
-      color: #ff9a22;
-      background-color: #fff;
-      border-radius: 100%;
-      margin-right: 0.6rem;
-      min-width: 2rem;
-      min-height: 2rem;
-    }
-  }
   .system-record {
     margin-right: 1rem;
   }

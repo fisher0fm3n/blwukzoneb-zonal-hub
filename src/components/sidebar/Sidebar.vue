@@ -1,33 +1,36 @@
 <template lang="html">
-<div class="sidebar"  :style="{ width: sidebarWidth }">
-  <h1>
-    <span v-if="collapsed">
-      <img class="sidebar-logo" src="../../assets/images/icons/spades.svg" />
+  <div class="sidebar" :style="{ width: sidebarWidth }">
+    <h1>
+      <span v-if="collapsed">
+        <img class="sidebar-logo" src="../../assets/images/icons/spades.svg" />
+      </span>
+
+      <span class="side-logo__text" v-else>
+        BLW UK Zone B
+      </span>
+    </h1>
+
+    <SidebarLink to="/" icon="fas fa-th-large">Dashboard</SidebarLink>
+    <SidebarLink to="/inventory" icon="fas fa-boxes">Inventory</SidebarLink>
+    <SidebarLink to="/content" icon="fas fa-sd-card">Content Log</SidebarLink>
+    <SidebarLink to="/registration" icon="fas fa-users">Attendance</SidebarLink>
+    <SidebarLink to="/settings" icon="fas fa-cog">Settings</SidebarLink>
+    <span
+      class="collapse-icon"
+      :class="{ 'rotate-180': collapsed }"
+      @click="toggleSidebar"
+    >
+      <i class="fas fa-sign-out-alt fa-flip-horizontal"></i>
     </span>
-
-    <span class="side-logo__text" v-else>
-      BLW UK Zone B
-    </span>
-  </h1>
-
-  <SidebarLink to="/" icon="fas fa-th-large">Dashboard</SidebarLink>
-  <SidebarLink to="/inventory" icon="fas fa-boxes">Inventory</SidebarLink>
-  <SidebarLink to="/content" icon="fas fa-sd-card">Content Log</SidebarLink>
-  <SidebarLink to="/registration" icon="fas fa-users">Attendance</SidebarLink>
-  <SidebarLink to="/settings" icon="fas fa-cog">Settings</SidebarLink>
-  <span class="collapse-icon" :class="{ 'rotate-180': collapsed }" @click="toggleSidebar">
-  <i class="fas fa-sign-out-alt fa-flip-horizontal"></i>
-</span>
-
-</div>
+  </div>
 </template>
 
 <script>
-import SidebarLink from './SidebarLink.vue';
-import { collapsed, toggleSidebar, sidebarWidth } from '../../assets/js/state';
+import SidebarLink from "./SidebarLink.vue";
+import { collapsed, toggleSidebar, sidebarWidth } from "../../assets/js/state";
 
 export default {
-  name: 'Sidebar',
+  name: "Sidebar",
   props: {},
   components: { SidebarLink },
   setup() {
@@ -37,55 +40,55 @@ export default {
 </script>
 
 <style lang="css">
-:root{
-  --sidebar-bg-color: #FF9A22;
-  --sidebar-item-hover: rgba(0,0,0,0.2);
-  --sidebar-item-active: rgba(0,0,0,0.2);
+:root {
+  --sidebar-bg-color: #ff9a22;
+  --sidebar-item-hover: rgba(0, 0, 0, 0.2);
+  --sidebar-item-active: rgba(0, 0, 0, 0.2);
 }
 </style>
 
 <style scoped>
-  .sidebar{
-    color: #fff;
-    background-color: var(--sidebar-bg-color);
-    float: left;
-    position: fixed;
-    position: 1;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    padding: 0.5em;
+.sidebar {
+  color: #fff;
+  background-color: var(--sidebar-bg-color);
+  float: left;
+  position: fixed;
+  position: 1;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  padding: 0.5em;
+  z-index: 1;
+  transition: 0.3s ease;
 
-    transition: 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
 
-    display: flex;
-    flex-direction: column;
-  }
+.sidebar-logo {
+  width: 1.8rem;
+}
 
-  .sidebar-logo{
-    width: 1.8rem;
-  }
+.side-logo__text {
+  font-size: 1.3rem;
+  font-weight: bold;
+}
 
-  .side-logo__text{
-    font-size: 1.3rem;
-font-weight: bold;
-  }
+.collapse-icon {
+  position: absolute;
+  bottom: 0;
+  padding: 0.75em;
+  cursor: pointer;
 
-  .collapse-icon{
-    position: absolute;
-    bottom: 0;
-    padding: 0.75em;
-    cursor: pointer;
+  color: rgba(255, 255, 255, 0.7);
 
-    color: rgba(255, 255,255, 0.7);
+  transition: 0.2s linear;
+}
 
-    transition: 0.2s linear;
-  }
-
-  .rotate-180{
-    transform: rotate(180deg);
-    transition: 0.2s linear;
-  }
+.rotate-180 {
+  transform: rotate(180deg);
+  transition: 0.2s linear;
+}
 /*
 .tooltip:hover {
   text-decoration: none;

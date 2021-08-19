@@ -5,7 +5,6 @@
 
       <!-- Item Info -->
       <div class="item-info d-flex flex-column">
-        <h4>Item</h4>
         <div class="input d-flex flex-column">
           <label for="itemName">Item Name</label>
           <input required type="text" id="itemName" v-model="itemName" />
@@ -30,10 +29,6 @@
               <option value="peripheral">Peripheral</option>
             </select>
           </div>
-          <div class="input d-flex flex-column">
-            <label for="ownerName">Owner Name</label>
-            <input required type="text" id="ownerName" v-model="ownerName" />
-          </div>
         </div>
         <div class="item-description">
           <div class="input d-flex flex-column">
@@ -47,11 +42,14 @@
             ></textarea>
           </div>
         </div>
+        <div class="input d-flex flex-column">
+          <label for="ownerName">Owner Name</label>
+          <input required type="text" id="ownerName" v-model="ownerName" />
+        </div>
       </div>
 
       <!-- Item Admin -->
       <div class="item-admin d-flex flex-column">
-        <h4>Admin Details</h4>
         <div class="item-admin-details d-flex justify-content-between">
           <div class="input d-flex flex-column">
             <label for="itemDate">Item Date</label>
@@ -68,11 +66,17 @@
       <div class="save d-flex">
         <button class="add-button">Add item</button>
       </div>
+
+      <div class="canel d-flex">
+        <button @click="closeAddItem" class="add-button">Cancel</button>
+      </div>
     </form>
   </div>
 </template>
 
 <script>
+import { mapMutations } from "vuex";
+
 export default {
   name: "itemModal",
   data() {
@@ -88,10 +92,39 @@ export default {
       adminName: null,
     };
   },
+  methods: {
+    ...mapMutations(["TOGGLE_ITEM"]),
+    closeAddItem() {
+      this.TOGGLE_ITEM();
+    },
+  },
 };
 </script>
 
 <style lang="scss" scoped>
+.item-wrap {
+  position: fixed;
+  top: 0;
+  background-color: transparent;
+  height: 100%;
+
+  .item-content {
+    position: relative;
+    padding: 56px;
+    max-width: 700px;
+    width: 100%;
+    height: 100%;
+    background-color: #ff9a22;
+    color: #fff;
+
+    h1 {
+      text-align: left;
+      font-weight: bold;
+      margin-bottom: 1rem;
+      color: #fff;
+    }
+  }
+}
 .add-button {
   cursor: pointer;
   font-size: 0.9rem;

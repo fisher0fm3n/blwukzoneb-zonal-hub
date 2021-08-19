@@ -1,26 +1,16 @@
 <template lang="html">
-  <router-link :to="to" class="link" :class="{ active:isActive }">
-  <i class="icon" :class="icon" />
-  <transition name="fade">
-  <span v-if="!collapsed">
-  <slot />
-</span>
-</transition>
-</router-link>
+  <router-link :to="to" class="link" :class="{ active: isActive }">
+    <i class="icon" :class="icon" />
+    <transition name="fade">
+      <span v-if="!collapsed">
+        <slot />
+      </span>
+    </transition>
+  </router-link>
 </template>
 
 <style scoped>
-.fade-enter-active,
-.fade-leave-active{
-transition: opacity 0.1s;
-}
-
-.fade-enter,
-.fade-leave-to{
-transition: opacity 0;
-}
-
-.link{
+.link {
   display: flex;
   align-items: center;
 
@@ -29,8 +19,8 @@ transition: opacity 0;
   font-weight: 400;
   user-select: none;
 
-  margin: .8rem 0;
-  padding: 1.3rem .6rem;
+  margin: 0.8rem 0;
+  padding: 1.3rem 0.6rem;
   border-radius: 0.25em;
   height: 1.5em;
 
@@ -38,15 +28,15 @@ transition: opacity 0;
   text-decoration: none;
   transition: background-color ease-out 250ms;
 }
-.link:hover{
+.link:hover {
   background-color: var(--sidebar-item-hover);
 }
 
-.link.active{
+.link.active {
   background-color: var(--sidebar-item-active);
 }
 
-.link .icon{
+.link .icon {
   flex-shrink: 0;
   font-size: 1.2rem;
   width: 25px;
@@ -55,9 +45,9 @@ transition: opacity 0;
 </style>
 
 <script type="text/javascript">
-import { computed } from 'vue';
-import { useRoute } from 'vue-router';
-import { collapsed } from '../../assets/js/state';
+import { computed } from "vue";
+import { useRoute } from "vue-router";
+import { collapsed } from "../../assets/js/state";
 
 export default {
   props: {
