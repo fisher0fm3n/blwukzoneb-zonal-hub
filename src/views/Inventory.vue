@@ -16,10 +16,10 @@
             <span>Filter by: Category<i class="fas fa-angle-down"></i></span>
 
             <ul v-show="filterMenu" class="filter-menu">
-              <li>Draft</li>
-              <li>Pending</li>
-              <li>Paid</li>
-              <li>Clear</li>
+              <li @click="filteredMenu">Draft</li>
+              <li @click="filteredMenu">Pending</li>
+              <li @click="filteredMenu">Paid</li>
+              <li @click="filteredMenu">Clear</li>
             </ul>
           </div>
         </div>
@@ -77,6 +77,7 @@ export default {
   data() {
     return {
       filterMenu: null,
+      filteredMenu: null,
     };
   },
   components: {

@@ -9,7 +9,7 @@
       <button @click="toggleEditItem()" class="edit">
         Edit
       </button>
-      <button @click="deleteItem(currentInvoice.docID)" class="delete">
+      <button @click="deleteItem(currentItem.docID)" class="delete">
         Delete
       </button>
     </div>
@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import { mapMutations, mapState } from "vuex";
+import { mapActions, mapMutations, mapState } from "vuex";
 
 export default {
   name: "itemView",
@@ -31,6 +31,7 @@ export default {
   },
   methods: {
     ...mapMutations(["SET_CURRENT_ITEM", "TOGGLE_EDIT_ITEM", "TOGGLE_ITEM"]),
+    ...mapActions(["DELETE_ITEM"]),
 
     getCurrentItem() {
       this.SET_CURRENT_ITEM(this.$route.params.itemID);
@@ -41,9 +42,22 @@ export default {
       this.TOGGLE_EDIT_ITEM();
       this.TOGGLE_ITEM();
     },
+
+    async deleteItem(docID) {
+      await this.DELETE_ITEM(docID);
+      this.$router.push({ name: "Inventory" });
+    },
   },
   computed: {
-    ...mapState(["currentItemArray"]),
+    ...mapState(["currentItemArray", "editItem"]),
+  },
+
+  watch: {
+    editItem() {
+      if (!this.editItem) {
+        this.currentItem = this.currentItemArray[0];
+      }
+    },
   },
 };
 </script>

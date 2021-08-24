@@ -77,14 +77,27 @@
 
       <!-- Save/Exit Buttons -->
       <div class="save d-flex">
-        <button type="button" @click="uploadItem" class="add-button">
+        <button
+          v-if="!editItem"
+          type="submit"
+          @click="uploadItem"
+          class="add-button"
+        >
           Add item
         </button>
       </div>
 
-      <div class="canel d-flex">
-        <button type="button" @click="closeAddItem" class="add-button">
+      <div class="cancel d-flex">
+        <button type="submit" @click="closeAddItem" class="add-button red">
           Cancel
+        </button>
+        <button
+          v-if="editItem"
+          type="submit"
+          @click="updateItem"
+          class="add-button blue"
+        >
+          Update
         </button>
       </div>
     </form>
@@ -93,10 +106,9 @@
 
 <script>
 import db from "../firebase/firebaseinit";
-import firebase from "firebase";
 import Loading from "../components/Loading.vue";
 import { uid } from "uid";
-import { mapMutations, mapState } from "vuex";
+import { mapActions, mapMutations, mapState } from "vuex";
 
 export default {
   name: "itemModal",
@@ -106,6 +118,7 @@ export default {
   data() {
     return {
       dateOptions: { year: "numeric", month: "short", day: "numeric" },
+      docID: null,
       loading: null,
       itemName: null,
       itemBarcode: null,
@@ -116,28 +129,47 @@ export default {
       itemDateUnix: null,
       itemImages: [],
       ownerName: null,
-      adminID: null,
     };
   },
   created() {
-    this.itemDateUnix = Date.now();
-    this.itemDate = new Date(this.itemDateUnix).toLocaleDateString(
-      "en-us",
-      this.dateOptions
-    );
+    if (!this.editItem) {
+      this.itemDateUnix = Date.now();
+      this.itemDate = new Date(this.itemDateUnix).toLocaleDateString(
+        "en-us",
+        this.dateOptions
+      );
+    }
+
+    if (this.editItem) {
+      const currentItem = this.currentItemArray[0];
+      this.docID = currentItem.docID;
+      this.itemName = currentItem.itemName;
+      this.itemBarcode = currentItem.itemBarcode;
+      this.itemCategory = currentItem.itemCategory;
+      this.itemCondition = currentItem.itemCondition;
+      this.itemDescription = currentItem.itemDescription;
+      this.itemDate = currentItem.itemDate;
+      this.itemDateUnix = currentItem.itemDateUnix;
+      this.itemImages = currentItem.itemImages;
+      this.ownerName = currentItem.ownerName;
+    }
   },
   methods: {
-    ...mapMutations(["TOGGLE_ITEM", "TOGGLE_MODAL"]),
+    ...mapMutations(["TOGGLE_ITEM", "TOGGLE_MODAL", "TOGGLE_EDIT_ITEM"]),
+
+    ...mapActions(["UPDATE_ITEM"]),
 
     checkClick(e) {
       if (e.target === this.$refs.itemWrap) {
         this.TOGGLE_MODAL();
-        console.log("Hi");
       }
     },
 
     closeAddItem() {
       this.TOGGLE_ITEM();
+      if (this.editItem) {
+        this.TOGGLE_EDIT_ITEM();
+      }
     },
 
     async uploadItem() {
@@ -165,12 +197,41 @@ export default {
       this.TOGGLE_ITEM();
     },
 
+    async updateItem() {
+      this.loading = true;
+      const dataBase = db.collection("items").doc(this.docID);
+
+      await dataBase.update({
+        itemName: this.itemName,
+        itemBarcode: this.itemBarcode,
+        itemCategory: this.itemCategory,
+        itemCondition: this.itemCondition,
+        itemDescription: this.itemDescription,
+        itemDate: this.itemDate,
+        itemImages: this.itemImages,
+        ownerName: this.ownerName,
+      });
+
+      this.loading = false;
+
+      const data = {
+        docID: this.docID,
+        routeID: this.$route.params.itemID,
+      };
+
+      this.UPDATE_ITEM(data);
+    },
+
     submitForm() {
+      if (this.editItem) {
+        this.updateItem();
+        return;
+      }
       this.uploadItem();
     },
   },
   computed: {
-    ...mapState(["editItem"]),
+    ...mapState(["editItem", "currentItemArray"]),
   },
 };
 </script>

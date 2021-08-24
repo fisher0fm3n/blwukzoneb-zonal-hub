@@ -31,6 +31,9 @@ export default createStore({
     TOGGLE_EDIT_ITEM(state) {
       state.editItem = !state.editItem;
     },
+    DELETE_ITEM(state, payload) {
+      state.itemData = state.itemData.filter((item) => item.docID !== payload);
+    },
   },
   actions: {
     async GET_ITEMS({ commit, state }) {
@@ -56,6 +59,19 @@ export default createStore({
         }
       });
       commit("ITEMS_LOADED");
+    },
+    async UPDATE_ITEM({ commit, dispatch }, { docID, routeID }) {
+      commit("DELETE_ITEM", docID);
+      await dispatch("GET_ITEMS");
+      commit("TOGGLE_ITEM");
+      commit("TOGGLE_EDIT_ITEM");
+      commit("SET_CURRENT_ITEM", routeID);
+    },
+
+    async DELETE_ITEM({ commit }, docID) {
+      const getItem = db.collection("items").doc(docID);
+      await getItem.delete();
+      commit("DELETE_ITEM", docID);
     },
   },
   modules: {},
