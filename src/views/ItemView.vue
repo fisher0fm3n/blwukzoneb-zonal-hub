@@ -3,7 +3,8 @@
     <router-link class="nav-link d-flex" :to="{ name: 'Inventory' }">
       <i class="fas fa-hand-point-left"></i> Go back
     </router-link>
-    {{ currentItem.itemName }}
+    <h2>{{ currentItem.itemName }}</h2>
+    <p>{{ currentItem.itemDescription }}</p>
 
     <div>
       <button @click="toggleEditItem()" class="edit">
