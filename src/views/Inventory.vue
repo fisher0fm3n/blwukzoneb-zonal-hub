@@ -13,13 +13,18 @@
             class="filter d-flex align-items-center"
             ref="filter"
           >
-            <span>Filter by: Category<i class="fas fa-angle-down"></i></span>
+            <span
+              >Filter by Category:
+              <span v-if="filteredItem">{{ filteredItem }}</span
+              ><i class="fas fa-angle-down"></i
+            ></span>
 
             <ul v-show="filterMenu" class="filter-menu">
-              <li @click="filteredMenu">Draft</li>
-              <li @click="filteredMenu">Pending</li>
-              <li @click="filteredMenu">Paid</li>
-              <li @click="filteredMenu">Clear</li>
+              <li @click="filteredItems">All</li>
+              <li @click="filteredItems">Cable</li>
+              <li @click="filteredItems">Light</li>
+              <li @click="filteredItems">Device</li>
+              <li @click="filteredItems">Add-On</li>
             </ul>
           </div>
         </div>
@@ -54,7 +59,7 @@
             </thead>
             <tbody>
               <Item
-                v-for="(item, index) in itemData"
+                v-for="(item, index) in filteredData"
                 :item="item"
                 :key="index"
               />
@@ -77,7 +82,7 @@ export default {
   data() {
     return {
       filterMenu: null,
-      filteredMenu: null,
+      filteredItem: "All",
     };
   },
   components: {
@@ -92,9 +97,39 @@ export default {
     toggleFilterMenu() {
       this.filterMenu = !this.filterMenu;
     },
+
+    filteredItems(e) {
+      if (e.target.innerText === "All") {
+        this.filteredItem = null;
+        return;
+      }
+      this.filteredItem = e.target.innerText;
+    },
   },
   computed: {
     ...mapState(["itemData"]),
+
+    filteredData() {
+      return this.itemData.filter((item) => {
+        if (this.filteredItem === "Camera") {
+          return item.itemCategory === "camera";
+        }
+
+        if (this.filteredItem === "Cable") {
+          return item.itemCategory === "cable";
+        }
+
+        if (this.filteredItem === "Light") {
+          return item.itemCategory === "light";
+        }
+
+        if (this.filteredItem === "Device") {
+          return item.itemCategory === "device";
+        }
+
+        return item;
+      });
+    },
   },
 };
 </script>
