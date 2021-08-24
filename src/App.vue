@@ -1,11 +1,15 @@
 <template>
-  <div v-if="!mobile">
-    <Sidebar />
-    <div class="app-content" :style="{ 'margin-left': sidebarWidth }">
-      <transition name="item">
-        <ItemModal v-if="itemModal" />
-      </transition>
-      <router-view />
+  <!-- Add loading animations -->
+  <div v-if="itemsLoaded">
+    <div v-if="!mobile">
+      <Sidebar />
+      <div class="app-content" :style="{ 'margin-left': sidebarWidth }">
+        <Modal v-if="modalActive" />
+        <transition name="item">
+          <ItemModal v-if="itemModal" />
+        </transition>
+        <router-view />
+      </div>
     </div>
   </div>
 
@@ -16,9 +20,11 @@
 </template>
 
 <script type="text/javascript">
-import { mapState } from "vuex";
+import { mapState, mapActions } from "vuex";
+import firebase from "firebase";
 import Sidebar from "@/components/sidebar/Sidebar.vue";
 import ItemModal from "@/components/ItemModal.vue";
+import Modal from "@/components/Modal.vue";
 import { sidebarWidth } from "@/assets/js/state";
 
 export default {
@@ -30,15 +36,19 @@ export default {
   components: {
     Sidebar,
     ItemModal,
+    Modal,
   },
   setup() {
     return { sidebarWidth };
   },
   created() {
+    this.GET_ITEMS();
     this.checkScreen();
     window.addEventListener("resize", this.checkScreen);
   },
   methods: {
+    ...mapActions(["GET_ITEMS"]),
+
     checkScreen() {
       const windowWidth = window.innerWidth;
       if (windowWidth <= 750) {
@@ -49,7 +59,7 @@ export default {
     },
   },
   computed: {
-    ...mapState(["itemModal"]),
+    ...mapState(["itemModal", "modalActive", "itemsLoaded"]),
   },
 };
 </script>

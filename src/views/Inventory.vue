@@ -24,8 +24,7 @@
           </div>
         </div>
       </div>
-      <div class="col-md-4 d-flex align-items-center">
-        <span class="system-record">There 10 items logged into the system</span>
+      <div class="col-md-4 d-flex align-items-center justify-content-right">
         <div @click="newItem" class="add-button d-flex align-items-center">
           <div
             class="inner-button d-flex justify-content-center align-items-center"
@@ -36,11 +35,43 @@
         </div>
       </div>
     </div>
+    <!-- Items -->
+    <div class="row">
+      <div class="col-md-12">
+        <div v-if="itemData.length > 0">
+          <table class="table mt-5 table-hover">
+            <thead>
+              <tr>
+                <th scope="col">Item #</th>
+                <th scope="col">Barcode</th>
+                <th scope="col">Category</th>
+                <th scope="col">Name</th>
+                <th scope="col">Item Condition</th>
+                <th scope="col">Item Owner</th>
+                <th scope="col">Created</th>
+                <th scope="col"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <Item
+                v-for="(item, index) in itemData"
+                :item="item"
+                :key="index"
+              />
+            </tbody>
+          </table>
+        </div>
+        <div v-else class="d-flex flex-column">
+          <img src="../assets/images/undraw_empty_xct9.svg" alt="" />
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-import { mapMutations } from "vuex";
+import { mapMutations, mapState } from "vuex";
+import Item from "../components/Item.vue";
 export default {
   name: "Inventory",
   data() {
@@ -48,7 +79,9 @@ export default {
       filterMenu: null,
     };
   },
-  components: {},
+  components: {
+    Item,
+  },
   methods: {
     ...mapMutations(["TOGGLE_ITEM"]),
     newItem() {
@@ -59,12 +92,32 @@ export default {
       this.filterMenu = !this.filterMenu;
     },
   },
+  computed: {
+    ...mapState(["itemData"]),
+  },
 };
 </script>
 
 <style lang="scss" scoped>
+thead {
+  background: rgba(255, 154, 34, 0.8);
+  color: #fff;
+  border-top-left-radius: 1rem;
+  border-top-right-radius: 1rem;
+}
+
+tr {
+  font-size: 0.9rem;
+}
+td {
+  font-size: 0.8rem;
+}
+th {
+  text-align: left;
+}
+
 .inventory {
-  padding: 0 4rem;
+  padding: 0 2rem;
   margin-top: 4rem;
   color: #131313;
   .page-header {
