@@ -1,7 +1,7 @@
 <template>
   <div>
     <h1>Hello {{ name }} Dashboard</h1>
-    <button class="logout" @click="Logout">Logout</button>
+    <button class="logout" @click="signOut">Logout</button>
   </div>
 </template>
 
@@ -35,6 +35,19 @@ export default {
       name,
       Logout,
     };
+  },
+
+  methods: {
+    signOut() {
+      firebase
+        .auth()
+        .signOut()
+        .then(() => {
+          this.$router.replace({
+            name: "Login",
+          });
+        });
+    },
   },
 };
 </script>

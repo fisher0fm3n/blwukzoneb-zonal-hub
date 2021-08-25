@@ -1,7 +1,7 @@
 <template lang="html">
   <div class="sidebar" :style="{ width: sidebarWidth }">
     <h1>
-      <span v-if="collapsed">
+      <span v-if="!collapsed">
         <img class="sidebar-logo" src="../../assets/images/icons/spades.svg" />
       </span>
 
@@ -13,7 +13,7 @@
     <SidebarLink to="/" icon="fas fa-th-large">Dashboard</SidebarLink>
     <SidebarLink to="/inventory" icon="fas fa-boxes">Inventory</SidebarLink>
     <SidebarLink to="/content" icon="fas fa-sd-card">Content Log</SidebarLink>
-    <SidebarLink to="/registration" icon="fas fa-users">Attendance</SidebarLink>
+    <SidebarLink to="/attendance" icon="fas fa-users">Attendance</SidebarLink>
     <SidebarLink to="/settings" icon="fas fa-cog">Settings</SidebarLink>
     <span
       class="collapse-icon"

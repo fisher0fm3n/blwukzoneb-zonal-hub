@@ -2,7 +2,11 @@
   <tr>
     <th scope="row">{{ item.itemID }}</th>
     <td>{{ item.itemBarcode }}</td>
-    <td>{{ item.itemCategory }}</td>
+    <td>
+      <div class="item-cat" v-if="item.itemCategory === 'camera'">
+        <i class="fas fa-camera"></i>
+      </div>
+    </td>
     <td>{{ item.itemName }}</td>
     <td>{{ item.itemCondition }}</td>
     <td>{{ item.ownerName }}</td>
@@ -21,6 +25,11 @@
 <script>
 export default {
   name: "item",
+  data() {
+    return {
+      category: null,
+    };
+  },
   props: ["item"],
 };
 </script>
@@ -33,5 +42,22 @@ td {
 
 th {
   text-align: left;
+}
+
+.item-cat {
+  text-align: center;
+  width: 2rem;
+  height: 2rem;
+  position: relative;
+
+  &::before {
+    content: "";
+    position: absolute;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 100%;
+    background-color: #ff9a22;
+    z-index: -1;
+  }
 }
 </style>

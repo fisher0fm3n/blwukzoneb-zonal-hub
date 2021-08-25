@@ -3,6 +3,10 @@ import db from "../firebase/firebaseinit";
 
 export default createStore({
   state: {
+    user: {
+      loggedIn: false,
+      data: null,
+    },
     itemData: [],
     itemModal: null,
     modalActive: null,
@@ -10,7 +14,19 @@ export default createStore({
     currentItemArray: null,
     editItem: null,
   },
+  getters: {
+    user(state) {
+      return state.user;
+    },
+  },
   mutations: {
+    SET_LOGGED_IN(state, value) {
+      state.user.loggedIn = value;
+    },
+    SET_USER(state, data) {
+      state.user.data = data;
+    },
+
     TOGGLE_ITEM(state) {
       state.itemModal = !state.itemModal;
     },

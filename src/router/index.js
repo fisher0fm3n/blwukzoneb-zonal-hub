@@ -19,13 +19,6 @@ const routes = [
     component: ItemView,
   },
   {
-    path: "/about",
-    name: "About",
-    component() {
-      return import(/* webpackChunkName: "about" */ "../views/About.vue");
-    },
-  },
-  {
     path: "/inventory",
     name: "Inventory",
     component() {
@@ -43,13 +36,63 @@ const routes = [
     },
   },
   {
+    path: "/content",
+    name: "Content",
+    component() {
+      return import(/* webpackChunkName: "content" */ "../views/Content.vue");
+    },
+  },
+  {
+    path: "/attendance",
+    name: "Attendance",
+    component() {
+      return import(
+        /* webpackChunkName: "attendance" */ "../views/Attendance.vue"
+      );
+    },
+  },
+  {
     path: "/register",
     name: "Register",
     component() {
       return import(/* webpackChunkName: "register" */ "../views/Register.vue");
     },
   },
+  {
+    path: "/settings",
+    name: "Settings",
+    component() {
+      return import(/* webpackChunkName: "setting" */ "../views/Settings.vue");
+    },
+  },
 ];
+
+let isLoggedIn = false;
+
+async function verify() {
+  try {
+    await new Promise((resolve, reject) =>
+      firebase.auth().onAuthStateChanged(
+        (user) => {
+          if (user) {
+            // Yes User is signed in.
+            isLoggedIn = true;
+            resolve("User is there");
+          } else {
+            // No user is not signed in.
+            isLoggedIn = false;
+            reject("There is no user");
+          }
+        },
+        // Prevent console errors
+        (error) => reject(error)
+      )
+    );
+    return true;
+  } catch (error) {
+    return false;
+  }
+}
 
 const router = createRouter({
   history: createWebHashHistory(),
@@ -59,10 +102,12 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   const requireAuth = to.matched.some((record) => record.meta.requiresAuth);
 
-  const isAuthenticated = firebase.auth().currentUser;
+  const isAuthenticated = verify();
 
-  if (requireAuth && !isAuthenticated) {
-    next("login");
+  console.log(isLoggedIn);
+
+  if (requireAuth && !isLoggedIn) {
+    next("Login");
   } else {
     next();
   }
