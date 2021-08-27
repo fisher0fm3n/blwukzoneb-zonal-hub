@@ -246,6 +246,7 @@ export default {
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
   width: 100%;
+  z-index: 9;
   &::-webkit-scrollbar {
     display: none !important;
   }

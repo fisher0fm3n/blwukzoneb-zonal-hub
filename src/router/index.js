@@ -29,6 +29,13 @@ const routes = [
     meta: { requiresAuth: true },
   },
   {
+    path: "/checkin",
+    name: "Check In",
+    component() {
+      return import(/* webpackChunkName: "checkin" */ "../views/CheckIn.vue");
+    },
+  },
+  {
     path: "/login",
     name: "Login",
     component() {
@@ -103,8 +110,6 @@ router.beforeEach((to, from, next) => {
   const requireAuth = to.matched.some((record) => record.meta.requiresAuth);
 
   const isAuthenticated = verify();
-
-  console.log(isLoggedIn);
 
   if (requireAuth && !isLoggedIn) {
     next("Login");

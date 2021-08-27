@@ -2,11 +2,35 @@
   <div class="inventory container-fluid">
     <div class="row">
       <div class="col-md-12">
+        <ul class="nav justify-content-center">
+          <li class="nav-item">
+            <router-link to="/checkin" class="link"> Check In </router-link>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Link</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Link</a>
+          </li>
+          <li class="nav-item">
+            <a
+              class="nav-link disabled"
+              href="#"
+              tabindex="-1"
+              aria-disabled="true"
+              >Disabled</a
+            >
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
         <h1 class="page-header">Inventory</h1>
       </div>
     </div>
     <div class="row">
-      <div class="col-md-8">
+      <div class="col-md-4">
         <div class="d-flex">
           <div
             @click="toggleFilterMenu"
@@ -21,6 +45,7 @@
 
             <ul v-show="filterMenu" class="filter-menu">
               <li @click="filteredItems">All</li>
+              <li @click="filteredItems">Camera</li>
               <li @click="filteredItems">Cable</li>
               <li @click="filteredItems">Light</li>
               <li @click="filteredItems">Device</li>
@@ -29,7 +54,29 @@
           </div>
         </div>
       </div>
-      <div class="col-md-4 d-flex align-items-center justify-content-right">
+
+      <div class="col-md-6">
+        <div class="input-group mb-3">
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Search for items"
+            aria-label="Search for items"
+            aria-describedby="basic-addon2"
+            v-model="search"
+          />
+          <div class="input-group-append">
+            <button
+              class="btn btn-outline-secondary"
+              type="submit"
+              @click="queryItems"
+            >
+              Button
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-2 d-flex align-items-center justify-content-right">
         <div @click="newItem" class="add-button d-flex align-items-center">
           <div
             class="inner-button d-flex justify-content-center align-items-center"
@@ -76,11 +123,13 @@
 
 <script>
 import { mapMutations, mapState } from "vuex";
+import { useRoute } from "vue-router";
 import Item from "../components/Item.vue";
 export default {
   name: "Inventory",
   data() {
     return {
+      search: "",
       filterMenu: null,
       filteredItem: "All",
     };
@@ -110,9 +159,14 @@ export default {
     ...mapState(["itemData"]),
 
     filteredData() {
+      let a = null;
       return this.itemData.filter((item) => {
         if (this.filteredItem === "Camera") {
-          return item.itemCategory === "camera";
+          a =
+            item.itemCategory === "camera" &&
+            item.itemName.toLowerCase().includes(this.search.toLowerCase());
+
+          return a;
         }
 
         if (this.filteredItem === "Cable") {
@@ -127,7 +181,7 @@ export default {
           return item.itemCategory === "device";
         }
 
-        return item;
+        return item.itemName.toLowerCase().includes(this.search.toLowerCase());
       });
     },
   },
@@ -150,6 +204,9 @@ td {
 }
 th {
   text-align: left;
+}
+
+.input-group {
 }
 
 .inventory {
