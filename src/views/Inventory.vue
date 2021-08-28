@@ -1,45 +1,34 @@
 <template lang="html">
   <div class="inventory container-fluid">
-    <div class="row">
-      <div class="col-md-12">
-        <ul class="nav justify-content-center">
-          <li class="nav-item">
-            <router-link to="/checkin" class="link"> Check In </router-link>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Link</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Link</a>
-          </li>
-          <li class="nav-item">
-            <a
-              class="nav-link disabled"
-              href="#"
-              tabindex="-1"
-              aria-disabled="true"
-              >Disabled</a
-            >
-          </li>
-        </ul>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-md-12">
+    <div class="row mb-5">
+      <div class="col-md-10">
         <h1 class="page-header">Inventory</h1>
       </div>
+      <div class="col-md-1 d-flex align-items-center">
+        <p>{{ this.itemBasketCount }}</p>
+        <img class="item-basket" src="../assets/images/shopping-cart.svg" />
+      </div>
+      <div class="col-md-1 d-flex align-items-center">
+        <div
+          @click="barcodeMode"
+          class="barcode-btn"
+          :class="toggleBarcode ? 'barcode-active' : ''"
+        >
+          <i class="fas fa-barcode"></i>
+        </div>
+      </div>
     </div>
     <div class="row">
-      <div class="col-md-4">
+      <div class="col-md-3">
         <div class="d-flex">
           <div
             @click="toggleFilterMenu"
             class="filter d-flex align-items-center"
             ref="filter"
           >
-            <span
+            <span class="menu-filter"
               >Filter by Category:
-              <span v-if="filteredItem">{{ filteredItem }}</span
+              <span class="" v-if="filteredItem">{{ filteredItem }}</span
               ><i class="fas fa-angle-down"></i
             ></span>
 
@@ -55,8 +44,8 @@
         </div>
       </div>
 
-      <div class="col-md-6">
-        <div class="input-group mb-3">
+      <div class="col-md-7">
+        <div class="input-group">
           <input
             type="text"
             class="form-control"
@@ -65,15 +54,6 @@
             aria-describedby="basic-addon2"
             v-model="search"
           />
-          <div class="input-group-append">
-            <button
-              class="btn btn-outline-secondary"
-              type="submit"
-              @click="queryItems"
-            >
-              Button
-            </button>
-          </div>
         </div>
       </div>
       <div class="col-md-2 d-flex align-items-center justify-content-right">
@@ -132,11 +112,17 @@ export default {
       search: "",
       filterMenu: null,
       filteredItem: "All",
+      toggleBarcode: false,
+      itemBasketCount: 0,
     };
+  },
+  created() {
+    this.itemBasketCount = this.itemBasket.length;
   },
   components: {
     Item,
   },
+
   methods: {
     ...mapMutations(["TOGGLE_ITEM"]),
     newItem() {
@@ -149,39 +135,54 @@ export default {
 
     filteredItems(e) {
       if (e.target.innerText === "All") {
-        this.filteredItem = null;
+        this.filteredItem = "All";
         return;
       }
       this.filteredItem = e.target.innerText;
     },
+
+    barcodeMode() {
+      this.toggleBarcode = !this.toggleBarcode;
+    },
   },
   computed: {
-    ...mapState(["itemData"]),
+    ...mapState(["itemData", "itemBasket"]),
 
     filteredData() {
       let a = null;
+
       return this.itemData.filter((item) => {
-        if (this.filteredItem === "Camera") {
-          a =
-            item.itemCategory === "camera" &&
-            item.itemName.toLowerCase().includes(this.search.toLowerCase());
+        if (!this.toggleBarcode) {
+          if (this.filteredItem === "Camera") {
+            a =
+              item.itemCategory === "camera" &&
+              item.itemName.toLowerCase().includes(this.search.toLowerCase());
 
-          return a;
+            return a;
+          }
+
+          if (this.filteredItem === "Cable") {
+            return item.itemCategory === "cable";
+          }
+
+          if (this.filteredItem === "Light") {
+            return item.itemCategory === "light";
+          }
+
+          if (this.filteredItem === "Device") {
+            return item.itemCategory === "device";
+          }
+
+          return item.itemName
+            .toLowerCase()
+            .includes(this.search.toLowerCase());
+        } else {
+          if (item.itemBarcode != "") {
+            return item.itemBarcode === this.search;
+          } else {
+            return item;
+          }
         }
-
-        if (this.filteredItem === "Cable") {
-          return item.itemCategory === "cable";
-        }
-
-        if (this.filteredItem === "Light") {
-          return item.itemCategory === "light";
-        }
-
-        if (this.filteredItem === "Device") {
-          return item.itemCategory === "device";
-        }
-
-        return item.itemName.toLowerCase().includes(this.search.toLowerCase());
       });
     },
   },
@@ -209,6 +210,10 @@ th {
 .input-group {
 }
 
+.item-basket {
+  width: 1.6rem;
+}
+
 .inventory {
   padding: 0 2rem;
   margin-top: 4rem;
@@ -224,7 +229,8 @@ th {
       font-size: 0.9rem;
       font-weight: 400;
       border-radius: 0.2rem;
-      padding: 0.6rem 1.2rem;
+      padding: 0.8rem 1rem;
+
       background-color: #ff9a22;
       color: #fff;
       svg {
@@ -234,26 +240,41 @@ th {
   }
 
   .filter-menu {
-    width: 11.5rem;
+    width: 12.3rem;
     position: absolute;
-    top: 13.6rem;
+    top: 10.6rem;
     padding: 0;
     list-style: none;
     background-color: #fff;
-    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    -webkit-box-shadow: 0px 0px 16px 0px rgba(50, 50, 50, 0.41);
+    -moz-box-shadow: 0px 0px 16px 0px rgba(50, 50, 50, 0.41);
+    box-shadow: 0px 0px 16px 0px rgba(50, 50, 50, 0.41);
     border-radius: 0.3rem;
     text-align: left;
+    z-index: 9;
     li {
       cursor: pointer;
-      font-size: 12px;
+      font-size: 0.9rem;
       padding: 10px 20px;
-      transition: color 250ms;
 
       &:hover {
         color: #fff;
         background-color: #ff9a22;
       }
     }
+  }
+
+  .barcode-btn {
+    background-color: #acacac;
+    color: #000;
+    padding: 0.2rem 0.8rem;
+    border-radius: 0.2rem;
+    font-size: 1.4rem;
+    cursor: pointer;
+  }
+
+  .barcode-active {
+    background-color: #00f148;
   }
 
   .system-record {

@@ -12,6 +12,7 @@ export default createStore({
     modalActive: null,
     itemsLoaded: null,
     currentItemArray: null,
+    itemBasket: [],
     editItem: null,
   },
   getters: {
@@ -26,7 +27,6 @@ export default createStore({
     SET_USER(state, data) {
       state.user.data = data;
     },
-
     TOGGLE_ITEM(state) {
       state.itemModal = !state.itemModal;
     },
